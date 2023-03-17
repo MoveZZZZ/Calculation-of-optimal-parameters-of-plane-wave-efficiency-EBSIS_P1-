@@ -11,7 +11,6 @@ dodatkoweOtwory::dodatkoweOtwory(double aOPNW, double aOPNK, double aOPZW, doubl
 	iloscOdcinkowPionowa = aIOPN;
 	iloscOdcinkowPozioma = aIOPZ;
 }
-
 double dodatkoweOtwory::getOtworyPionoweWiersze()
 {
 	return otworyPionoweWiersze;

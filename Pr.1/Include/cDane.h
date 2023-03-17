@@ -17,7 +17,6 @@ private:
 	double dodatkoweOtworyPozK;
 	double dodatkoweOdcinekiPionowa;
 	double dodatkoweOdcinekiPozioma;
-	
 public: 
 	cDane(double aPrzekatna, double aSkutecznosc);
 

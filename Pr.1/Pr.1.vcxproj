@@ -139,11 +139,15 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\cMenu.cpp" />
+    <ClCompile Include="Src\cController.cpp" />
     <ClCompile Include="Src\dodatkoweOtwory.cpp" />
     <ClCompile Include="Src\cDane.cpp" />
     <ClCompile Include="Pr.1.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\cMenu.h" />
+    <ClInclude Include="Include\cController.h" />
     <ClInclude Include="Include\dodatkoweOtwory.h" />
     <ClInclude Include="Include\cDane.h" />
   </ItemGroup>
@@ -152,7 +156,6 @@
     <Text Include="ResultTxt\DanePolozenie2.txt" />
     <Text Include="ResultTxt\DanePolozenie3.txt" />
     <Text Include="ResultTxt\DanePolozenie4.txt" />
-    <Text Include="ResultTxt\Skut.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

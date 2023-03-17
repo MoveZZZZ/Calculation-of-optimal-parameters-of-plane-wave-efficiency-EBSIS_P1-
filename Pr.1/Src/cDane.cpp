@@ -14,8 +14,6 @@ void cDane::setIloscOtwarc(double aOtwarcia)
 {
 	iloscOtwarc = aOtwarcia;
 }
-
-
 double cDane::getPrzekatna()
 {
 	return przekatna;
@@ -81,7 +79,6 @@ double cDane::getDodatkoweOtworyPionW()
 {
 	return dodatkoweOtworyPionW;
 }
-
 void cDane::setDodatkoweOtworyPionW(double aWierszePionoweDodatkowe)
 {
 	dodatkoweOtworyPionW = aWierszePionoweDodatkowe;

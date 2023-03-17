@@ -24,6 +24,12 @@
     <ClCompile Include="Src\dodatkoweOtwory.cpp">
       <Filter>Исходные файлы</Filter>
     </ClCompile>
+    <ClCompile Include="Src\cController.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
+    <ClCompile Include="Src\cMenu.cpp">
+      <Filter>Исходные файлы</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Include\cDane.h">
@@ -32,12 +38,17 @@
     <ClInclude Include="Include\dodatkoweOtwory.h">
       <Filter>Файлы заголовков</Filter>
     </ClInclude>
+    <ClInclude Include="Include\cController.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
+    <ClInclude Include="Include\cMenu.h">
+      <Filter>Файлы заголовков</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Text Include="ResultTxt\DanePolozenie1.txt" />
     <Text Include="ResultTxt\DanePolozenie2.txt" />
     <Text Include="ResultTxt\DanePolozenie3.txt" />
     <Text Include="ResultTxt\DanePolozenie4.txt" />
-    <Text Include="ResultTxt\Skut.txt" />
   </ItemGroup>
 </Project>

@@ -13,10 +13,8 @@ private:
 	double pole;
 	double dodatkoweOtworyPionW;
 	double dodatkoweOtworyPionK;
-
 	double dodatkoweOtworyPozW;
 	double dodatkoweOtworyPozK;
-
 	double dodatkoweOdcinekiPionowa;
 	double dodatkoweOdcinekiPozioma;
 	

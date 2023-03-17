@@ -15,7 +15,7 @@ Dodatkowe odcinki, linia pionowa: 4
 Dodatkowe otwory, odcinek linia pionowa: 6, wierszy: 2, kolumny: 3
 Dodatkowe odcinki, linia pozioma: 4
 Dodatkowe otwory, odcinek linia pozioma: 6, wierszy: 2, kolumny: 3
----------------------------------------------------------------------------
+--------------------------------------------------------------------------
 Liczba odcinkow na plycie: 16, wierszy: 4, kolumny: 4
 Odleglosc pomiêdzy odcinkami(cm): 1.92175
 Liczba otworów na odcinku: 9, wierszy: 3, kolumny: 3

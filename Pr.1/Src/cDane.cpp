@@ -21,7 +21,6 @@ double cDane::getPrzekatna()
 	return przekatna;
 }
 
-
 double cDane::getSkutecznosc()
 {
 	return skutecznosc;

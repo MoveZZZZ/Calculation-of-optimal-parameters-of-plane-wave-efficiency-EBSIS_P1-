@@ -308,11 +308,6 @@ int main() {
     int odstepOdGranicPlyty = 0;
     int przekatnaZmiana = 0;
 
-    //odstep od granic plyty
-    //szerokoscPlyty = szerokoscPlyty - 2 * dlugoscFali / 10;
-    //dlugoscPlyty = dlugoscPlyty - 2 * dlugoscFali / 10;
-
-
     int menu;
     string plik = "ResultTxt/DanePolozenie";
     string koniecPliku = ".txt";

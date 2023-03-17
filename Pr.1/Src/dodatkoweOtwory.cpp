@@ -16,7 +16,6 @@ double dodatkoweOtwory::getOtworyPionoweWiersze()
 {
 	return otworyPionoweWiersze;
 }
-
 double dodatkoweOtwory::getOtworyPionoweKolumny()
 {
 	return otworyPionoweKolumny;

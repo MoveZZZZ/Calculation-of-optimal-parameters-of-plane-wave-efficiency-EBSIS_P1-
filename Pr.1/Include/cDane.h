@@ -11,7 +11,6 @@ private:
 	double wierszeOdcinek; 
 	double kolumnyOdcinek; 
 	double pole;
-
 	double dodatkoweOtworyPionW;
 	double dodatkoweOtworyPionK;
 

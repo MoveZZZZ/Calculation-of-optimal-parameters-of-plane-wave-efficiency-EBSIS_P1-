@@ -7,6 +7,5 @@ int main() {
     menu = new cMenu();
     menu->printMenu();
     delete menu;
-
 }
     

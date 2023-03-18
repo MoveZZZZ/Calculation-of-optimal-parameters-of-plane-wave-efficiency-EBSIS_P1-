@@ -6,30 +6,36 @@ cMenu::cMenu()
     bPrzekatnaZmiana = false;
     polozenie = 5;
     polozenieStart = 1;
+    menu = 0;
+    odstepOdGranic = 0;
+    przekatnaMinimalna = 0;
+    przekatnaZmiana = 0;
 }
-
-
+void cMenu::startPage()
+{
+    std::cout << "+---------------------------------------------------+\n";
+    std::cout << "|             Author: Maksim Filatau                |\n";
+    std::cout << "|             Indeks: 259156                        |\n";
+    std::cout << "|***************************************************|\n";
+    std::cout << "|     Program sluzy do obliczenia optymalnej        |\n";
+    std::cout << "|           liczby n - otworow, S - pola            |\n";
+    std::cout << "|            dla znanej czestotliwosci              |\n";
+    std::cout << "|            i podanego rozmiaru plyty              |\n";
+    std::cout << "|          w znanym zakresie skutecznosci           |\n";
+    std::cout << "|          dla roznie ulozonych trojkatow           |\n";
+    std::cout << "|           prostokatnych rownoramiennych           |\n";
+    std::cout << "|***************************************************|\n";
+    std::cout << "|                 Wybierz opcje                     |\n";
+    std::cout << "|+++++++++++++++++++++++++++++++++++++++++++++++++++|\n";
+    std::cout << "| 1: Wpisac wlasne dane do obliczen                 |\n";
+    std::cout << "| 2: Obliczyc wartosci wedlug danych domyslnych     |\n";
+    std::cout << "+---------------------------------------------------+\n";
+}
 void cMenu::printMenu()
 {
     do {
     startMenu:
-        std::cout << "+---------------------------------------------------+\n";
-        std::cout << "|             Author: Maksim Filatau                |\n";
-        std::cout << "|             Indeks: 259156                        |\n";
-        std::cout << "|***************************************************|\n";
-        std::cout << "|     Program sluzy do obliczenia optymalnej        |\n";
-        std::cout << "|           liczby n - otworow, S - pola            |\n";
-        std::cout << "|            dla znanej czestotliwosci              |\n";
-        std::cout << "|            i podanego rozmiaru plyty              |\n";
-        std::cout << "|          w znanym zakresie skutecznosci           |\n";
-        std::cout << "|          dla roznie ulozonych trojkatow           |\n";
-        std::cout << "|           prostokatnych rownoramiennych           |\n";
-        std::cout << "|***************************************************|\n";
-        std::cout << "|                 Wybierz opcje                     |\n";
-        std::cout << "|+++++++++++++++++++++++++++++++++++++++++++++++++++|\n";
-        std::cout << "| 1: Wpisac wlasne dane do obliczen                 |\n";
-        std::cout << "| 2: Obliczyc wartosci wedlug danych domyslnych     |\n";
-        std::cout << "+---------------------------------------------------+\n";
+        startPage();
         std::cout << "Opcja: "; std::cin >> menu;
         switch (menu)
         {
@@ -65,7 +71,6 @@ void cMenu::printCase1()
     }
     cController* controller;
     controller = new cController(czestotliwosc, dlugoscPlyty, szerokoscPlyty, minimalnaSkutecznosc, maksymalnaSkutecznosc, bOdstepOdGranic, bPrzekatnaZmiana, przekatnaMinimalna);
-    //cController controller(czestotliwosc, dlugoscPlyty, szerokoscPlyty, minimalnaSkutecznosc, maksymalnaSkutecznosc, bOdstepOdGranic, bPrzekatnaZmiana, przekatnaMinimalna);
     controller->printData();
     if (polozenie >= 5 || polozenie <= 0)
     {
@@ -84,11 +89,13 @@ void cMenu::printCase1()
 
 void cMenu::printCase2()
 {
-    cController *controller;
+    cController* controller;
     controller = new cController();
     controller->printData();
     while (polozenieStart <= 4)
     {
+       
+        
         controller->startCalculation(polozenieStart);
         polozenieStart++;
     }

@@ -8,20 +8,15 @@
 #include<stdlib.h>
 #include "cDane.h"
 #include "dodatkoweOtwory.h"
-class cController
+#include "cBasicParameters.h"
+class cController: public cBasicParameters
 {
 private: 
-    double czestotliwosc;
     const double predkoscSwiatla = 299792458; // m/s
     double dlugoscFali; // m
-    double szerokoscPlyty; //m
-    double dlugoscPlyty; //m
-
     double przekatnaMinimalna; //m
     double przekatnaMaksymalna;//m
     //--------------------------------------------------------------------------------------------------------------
-    double maksymalnaSkutecznosc;
-    double minimalnaSkutecznosc;
 
     double odlegloscPomiedzyOdcinkami;
 
@@ -59,10 +54,10 @@ public:
 
     void wierszyOrazKolumnyOdcinkowNaPlycie();
 
-    double* wierszyOrazKolumnyNaOdcinkuTrojkatProsty(double odstepPomiedzyOtworami, double przyprostokatna);
-    double* wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(double odstepPomiedzyOtworami, double przyprostokatna);
-    double* wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciNaPrzeciwprosokatnej(double odstepPomiedzyOtworami, double przyprostokatna, double przeciwprostokatna);
-    double* wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciZebow(double odstepPomiedzyOtworami, double przyprostokatna, double przeciwprostokatna);
+    double* wierszyOrazKolumnyNaOdcinkuTrojkatProsty(double odstepPomiedzyOtworami, double przyprostokatna, double aSzerokosc, double aDlugosc, bool isDodatkowe);
+    double* wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(double odstepPomiedzyOtworami, double przyprostokatna, double aSzerokosc, double aDlugosc, bool isDodatkowe);
+    double* wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciNaPrzeciwprosokatnej(double odstepPomiedzyOtworami, double przyprostokatna, double przeciwprostokatna, double aSzerokosc, double aDlugosc, bool isDodatkowe);
+    double* wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciZebow(double odstepPomiedzyOtworami, double przyprostokatna, double przeciwprostokatna, double aSzerokosc, double aDlugosc, bool isDodatkowe);
     void dodatkoweOtworyNaPlycie(double przekatna, double odstepOtwory);
     double poleOtworow(double liczbaOtworow, double przyprostokatna);
     void obliczenieParametrow();

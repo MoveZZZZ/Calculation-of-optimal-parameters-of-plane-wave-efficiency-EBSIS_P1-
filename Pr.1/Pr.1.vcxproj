@@ -139,6 +139,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="Src\cBasicParameters.cpp" />
     <ClCompile Include="Src\cMenu.cpp" />
     <ClCompile Include="Src\cController.cpp" />
     <ClCompile Include="Src\dodatkoweOtwory.cpp" />
@@ -146,6 +147,7 @@
     <ClCompile Include="Pr.1.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Include\cBasicParameters.h" />
     <ClInclude Include="Include\cMenu.h" />
     <ClInclude Include="Include\cController.h" />
     <ClInclude Include="Include\dodatkoweOtwory.h" />

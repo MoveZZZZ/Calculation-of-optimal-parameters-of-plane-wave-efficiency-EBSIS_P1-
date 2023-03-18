@@ -1,15 +1,10 @@
 #pragma once
 #include<iostream>
 #include "../Include/cController.h"
-class cMenu
+class cMenu: public cBasicParameters
 {
 private:
 	int menu;
-	double czestotliwosc; 
-	double dlugoscPlyty;
-	double szerokoscPlyty; 
-	double minimalnaSkutecznosc;
-	double maksymalnaSkutecznosc;
 	double polozenie; 
 	double polozenieStart; 
 	double przekatnaMinimalna;
@@ -23,6 +18,7 @@ private:
 	
 public:
 	cMenu();
+	void startPage();
 	void printMenu();
 	void printCase1();
 	void printCase2();

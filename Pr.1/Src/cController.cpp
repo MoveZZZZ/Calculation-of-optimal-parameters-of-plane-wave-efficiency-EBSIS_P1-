@@ -1,18 +1,11 @@
 #include "../Include/cController.h"
 
-cController::cController(double aCzestotliwosc, double aDlugoscPlyty, double aSzerokoscPlyty, double aMinSkutecznosc, double aMaxSkutecznosc,  bool aOdstepPlyta, bool aZmianaPrzek, double aNewPrzekatna=0)
+cController::cController(double aCzestotliwosc, double aDlugoscPlyty, double aSzerokoscPlyty, double aMinSkutecznosc, double aMaxSkutecznosc, bool aOdstepPlyta, bool aZmianaPrzek, double aNewPrzekatna = 0)
+    :cBasicParameters(aCzestotliwosc, aDlugoscPlyty, aSzerokoscPlyty, aMinSkutecznosc, aMaxSkutecznosc)
 {
-	czestotliwosc = aCzestotliwosc * pow(10, 9);
-	dlugoscPlyty = aDlugoscPlyty;
-	szerokoscPlyty = aSzerokoscPlyty;
-	minimalnaSkutecznosc = aMinSkutecznosc;
-	maksymalnaSkutecznosc = aMaxSkutecznosc;
-
-
-	dlugoscFali = predkoscSwiatla / czestotliwosc;
+	dlugoscFali = predkoscSwiatla / getCzestotliwosc();
 	przekatnaMinimalna = dlugoscFali/10;
 	przekatnaMaksymalna = dlugoscFali / 2;
-     
     odstepPlyta = aOdstepPlyta;
 
 	odlegloscPomiedzyOdcinkami = dlugoscFali / 10;
@@ -25,29 +18,22 @@ cController::cController(double aCzestotliwosc, double aDlugoscPlyty, double aSz
     dlugoscOdcinku = dlugoscFali / 2;
     if (aOdstepPlyta)
     {
-        szerokoscPlyty = szerokoscPlyty - dlugoscFali / 10;
-        dlugoscPlyty = dlugoscPlyty - dlugoscFali / 10;
+        szerokoscPlyty = getSzerokoscPlyty()- dlugoscFali / 10;
+        dlugoscPlyty = getDlugoscPlyty() - dlugoscFali / 10;
     }
     if (aZmianaPrzek)
         przekatnaMinimalna = aNewPrzekatna;
 }
 
-cController::cController()
+cController::cController():cBasicParameters()
 {
-	czestotliwosc = 1.56 * pow(10, 9); // Hz  //1.56
-	dlugoscFali = predkoscSwiatla / czestotliwosc;
-	szerokoscPlyty = 0.5;
-	dlugoscPlyty = 0.5;
+	dlugoscFali = predkoscSwiatla / getCzestotliwosc();
 	przekatnaMinimalna = 0.001;
 	przekatnaMaksymalna = dlugoscFali / 2;
-	minimalnaSkutecznosc = 20.0;
-	maksymalnaSkutecznosc = 100.0;
 	odlegloscPomiedzyOdcinkami = dlugoscFali / 10;
     fileName = "";
-
     wierszyIkolumnyOdcinek = new double[2];
     wierszyIkolumnyPlyta = new double[2];
-
     szerokoscOdcinku = dlugoscFali / 2;
     dlugoscOdcinku = dlugoscFali / 2;
 }
@@ -59,9 +45,9 @@ void cController::writeResultFiles()
     if (out.is_open())
     {
         out << "*********DANE POCATKOWE*********" << std::endl;
-        out << "Czestotliwosc(Hz): " << czestotliwosc << ", rozmiar plyty(cm): " << dlugoscPlyty * 100 << "x" << szerokoscPlyty* 100 << std::endl;
+        out << "Czestotliwosc(Hz): " << getCzestotliwosc() << ", rozmiar plyty(cm): " << getDlugoscPlyty()* 100 << "x" << getSzerokoscPlyty()* 100 << std::endl;
         out << "Rozmiar odcinku(cm): " << (dlugoscFali / 2) * 100 << "x" << (dlugoscFali / 2) * 100 << ", odleglosc pomiedzy odc.(cm):" << odlegloscPomiedzyOdcinkami * 100 << std::endl;
-        out << "Zakres skutecznosci(dB), od: " << minimalnaSkutecznosc << " do " << maksymalnaSkutecznosc<< std::endl;
+        out << "Zakres skutecznosci(dB), od: " << getMinimalnaSkutecznosc()<< " do " << getMaksymalnaSkutecznosc()<< std::endl;
         out << "Przekatna(cm), od: " << przekatnaMinimalna * 100 << " do " << przekatnaMaksymalna* 100 << std::endl;
         out << "Polozenie: " << polozenie << std::endl;
         out << "***************************************************************************" << std::endl;
@@ -73,8 +59,12 @@ void cController::writeResultFiles()
             out << "Odleglosc pomiêdzy otworami(cm): " << dataStorage[i].getOdleglosc() * 100 << "; przekatna(cm): " << dataStorage[i].getPrzekatna() * 100 << std::endl;
             out << "Otrzymana skutecznosc(dB):" << dataStorage[i].getSkutecznosc() << "\nCalkowita ilosc otworow(dodatkowe): " << dataStorage[i].getIloscOtwarc() << "(" << dataStorage[i].getDodatkoweOtworyPionK() * dataStorage[i].getDodatkoweOtworyPionW() * dataStorage[i].getDodatkoweOdcinkiPionowa()
                 + dataStorage[i].getDodatkoweOtworyPozK() * dataStorage[i].getDodatkoweOtworyPozW() * dataStorage[i].getDodatkoweOdcinkiPozioma() << ")" << ", ca³kowite pole otworów(cm^2): " << dataStorage[i].getPole() * 10000 << std::endl;
+            out << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^"<<std::endl;
+            out << "Rozmiar odcinku linia pionowa(cm): " << pozostalyOdcinekPionowyDlugosc*100 << "x" << pozostalyOdcinekPionowySzerekosc*100 << std::endl;
             out << "Dodatkowe odcinki, linia pionowa: " << dataStorage[i].getDodatkoweOdcinkiPionowa() << std::endl;
             out << "Dodatkowe otwory, odcinek linia pionowa: " << dataStorage[i].getDodatkoweOtworyPionK() * dataStorage[i].getDodatkoweOtworyPionW() << ", wierszy: " << dataStorage[i].getDodatkoweOtworyPionW() << ", kolumny: " << dataStorage[i].getDodatkoweOtworyPionK() << std::endl;
+            out << "^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^" << std::endl;
+            out << "Rozmiar odcinku linia pozioma(cm): " << pozostalyOdcinekPoziomyDlugosc*100 << "x" << pozostalyOdcinekPoziomySzerekosc*100 << std::endl;
             out << "Dodatkowe odcinki, linia pozioma: " << dataStorage[i].getDodatkoweOdcinkiPozioma() << std::endl;
             out << "Dodatkowe otwory, odcinek linia pozioma: " << dataStorage[i].getDodatkoweOtworyPozK() * dataStorage[i].getDodatkoweOtworyPozW() << ", wierszy: " << dataStorage[i].getDodatkoweOtworyPozW() << ", kolumny: " << dataStorage[i].getDodatkoweOtworyPozK() << std::endl;
             out << "---------------------------------------------------------------------------" << std::endl;
@@ -91,100 +81,150 @@ void cController::vectorSort()
 
 void cController::wierszyOrazKolumnyOdcinkowNaPlycie()
 {
-    wierszyIkolumnyPlyta[0] = floor((szerokoscPlyty) / (szerokoscOdcinku + odlegloscPomiedzyOdcinkami)); //liczba wierszy
-    wierszyIkolumnyPlyta[1] = floor((dlugoscPlyty) / (dlugoscOdcinku + odlegloscPomiedzyOdcinkami)); //liczba kolumn 
+    wierszyIkolumnyPlyta[0] = floor((getSzerokoscPlyty()+odlegloscPomiedzyOdcinkami) / (szerokoscOdcinku + odlegloscPomiedzyOdcinkami)); //liczba wierszy
+    wierszyIkolumnyPlyta[1] = floor((getDlugoscPlyty()+odlegloscPomiedzyOdcinkami) / (dlugoscOdcinku + odlegloscPomiedzyOdcinkami)); //liczba kolumn 
 }
 
-double* cController::wierszyOrazKolumnyNaOdcinkuTrojkatProsty(double odstepPomiedzyOtworami, double przyprostokatna)
+double* cController::wierszyOrazKolumnyNaOdcinkuTrojkatProsty(double odstepPomiedzyOtworami, double przyprostokatna, double aSzerokosc=0, double aDlugosc=0, bool isDodatkowe=false)
 {
     double* parametryWK = new double[2];
-    parametryWK[0] = floor((szerokoscOdcinku + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba wierszy
-    parametryWK[1] = floor((dlugoscOdcinku + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba kolumn
-    return parametryWK;
-}
-double* cController::wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(double odstepPomiedzyOtworami, double przyprostokatna)
-{
-    double* parametryWK = new double[2];
-    parametryWK[0] = floor((szerokoscOdcinku + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba wierszy
-    parametryWK[1] = 2 * floor((dlugoscOdcinku + odstepPomiedzyOtworami) / (przyprostokatna + 2 * odstepPomiedzyOtworami)); //liczba kolumn
-    if (parametryWK[1] / 2 * (przyprostokatna + 2 * odstepPomiedzyOtworami) + przyprostokatna <= dlugoscOdcinku)
+    if (isDodatkowe)
     {
-        parametryWK[1] += 1;
+        parametryWK[0] = floor((aSzerokosc + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba wierszy
+        parametryWK[1] = floor((aDlugosc + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba kolumn
+    }
+    else
+    {
+        parametryWK[0] = floor((szerokoscOdcinku + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba wierszy
+        parametryWK[1] = floor((dlugoscOdcinku + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba kolumn
     }
     return parametryWK;
 }
-double* cController::wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciNaPrzeciwprosokatnej(double odstepPomiedzyOtworami, double przyprostokatna, double przeciwprostokatna)
+double* cController::wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(double odstepPomiedzyOtworami, double przyprostokatna, double aSzerokosc = 0, double aDlugosc = 0, bool isDodatkowe = false)
+{
+    double* parametryWK = new double[2];
+    if (isDodatkowe)
+    {
+        parametryWK[0] = floor((aSzerokosc + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba wierszy
+        parametryWK[1] = 2 * floor((aDlugosc + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami/sqrt(2)+odstepPomiedzyOtworami)); //liczba kolumn
+        if (parametryWK[1] /2 * (przyprostokatna +  odstepPomiedzyOtworami/sqrt(2) + odstepPomiedzyOtworami) + przyprostokatna <= aDlugosc)
+        {
+            parametryWK[1] += 1;
+        }
+    }
+    else
+    {
+        parametryWK[0] = floor((szerokoscOdcinku + odstepPomiedzyOtworami) / (przyprostokatna + odstepPomiedzyOtworami)); //liczba wierszy
+        parametryWK[1] = 2 * floor((dlugoscOdcinku + odstepPomiedzyOtworami) / (przyprostokatna +  odstepPomiedzyOtworami/sqrt(2) + odstepPomiedzyOtworami)); //liczba kolumn
+        if (parametryWK[1] / 2 * (przyprostokatna + odstepPomiedzyOtworami / sqrt(2) + odstepPomiedzyOtworami) + przyprostokatna  <= dlugoscOdcinku)
+        {
+            parametryWK[1] += 1;
+        }
+    }
+
+    return parametryWK;
+}
+double* cController::wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciNaPrzeciwprosokatnej(double odstepPomiedzyOtworami, double przyprostokatna, double przeciwprostokatna, double aSzerokosc = 0, double aDlugosc = 0, bool isDodatkowe = false)
 {
     double* parametryWK = new double[2];
     double wysokosc = (przyprostokatna * sqrt(2)) / 2;
-    parametryWK[0] = floor((szerokoscOdcinku + odstepPomiedzyOtworami) / (wysokosc + odstepPomiedzyOtworami)); //liczba wierszy
-    parametryWK[1] = floor((dlugoscOdcinku + odstepPomiedzyOtworami) / (przeciwprostokatna + odstepPomiedzyOtworami)); //liczba kolumn
+    if (isDodatkowe)
+    {
+        parametryWK[0] = floor((aSzerokosc + odstepPomiedzyOtworami) / (wysokosc + odstepPomiedzyOtworami)); //liczba wierszy
+        parametryWK[1] = floor((aDlugosc + odstepPomiedzyOtworami) / (przeciwprostokatna + odstepPomiedzyOtworami)); //liczba kolumn
+    }
+    else
+    {
+        parametryWK[0] = floor((szerokoscOdcinku + odstepPomiedzyOtworami) / (wysokosc + odstepPomiedzyOtworami)); //liczba wierszy
+        parametryWK[1] = floor((dlugoscOdcinku + odstepPomiedzyOtworami) / (przeciwprostokatna + odstepPomiedzyOtworami)); //liczba kolumn
+    }
     return parametryWK;
 }
-double* cController::wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciZebow(double odstepPomiedzyOtworami, double przyprostokatna, double przeciwprostokatna)
+double* cController::wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciZebow(double odstepPomiedzyOtworami, double przyprostokatna, double przeciwprostokatna, double aSzerokosc = 0, double aDlugosc = 0, bool isDodatkowe = false)
 {
     double* parametryWK = new double[2];
     double wysokosc = (przyprostokatna * sqrt(2)) / 2;
-    parametryWK[0] = floor((szerokoscOdcinku + odstepPomiedzyOtworami) / (wysokosc + odstepPomiedzyOtworami)); //liczba wierszy
-    parametryWK[1] = floor((dlugoscOdcinku + odstepPomiedzyOtworami + 2 * przeciwprostokatna) / (przeciwprostokatna + odstepPomiedzyOtworami)); //liczba kolumn
-    if (int(parametryWK[1]) % 2 == 0)
+    if (isDodatkowe)
     {
-        parametryWK[1] -= 1;
+        parametryWK[0] = floor((aSzerokosc + odstepPomiedzyOtworami) / (wysokosc + odstepPomiedzyOtworami)); //liczba wierszy
+        parametryWK[1] = floor((aSzerokosc + odstepPomiedzyOtworami/sqrt(2) + 2*przeciwprostokatna) / (przeciwprostokatna+ odstepPomiedzyOtworami)); //liczba kolumn
+       
+        if (int(parametryWK[1]) % 2 == 0)
+        {
+            parametryWK[1] -= 1;
+        }
+        if (((parametryWK[1] - 2) * przeciwprostokatna + (parametryWK[1]-1) * odstepPomiedzyOtworami/sqrt(2) + przeciwprostokatna / 2 + odstepPomiedzyOtworami/sqrt(2)) <= aDlugosc)
+        {
+            parametryWK[1] += 1;
+        }
     }
-    if (((parametryWK[1] - 2) * przeciwprostokatna + parametryWK[1] * odstepPomiedzyOtworami + przeciwprostokatna / 2) <= dlugoscOdcinku)
+    else
     {
-        parametryWK[1] += 1;
+        parametryWK[0] = floor((szerokoscOdcinku + odstepPomiedzyOtworami) / (wysokosc + odstepPomiedzyOtworami)); //liczba wierszy
+        parametryWK[1] = floor((dlugoscOdcinku + odstepPomiedzyOtworami / sqrt(2) + 2 * przeciwprostokatna) / (przeciwprostokatna + odstepPomiedzyOtworami)); //liczba kolumn
+        if (int(parametryWK[1]) % 2 == 0)
+        {
+            parametryWK[1] -= 1;
+        }
+        if (((parametryWK[1] - 2) * przeciwprostokatna + (parametryWK[1] - 1) * odstepPomiedzyOtworami / sqrt(2) + przeciwprostokatna / 2 + odstepPomiedzyOtworami / sqrt(2)) <= dlugoscOdcinku)
+        {
+            parametryWK[1] += 1;
+        }
     }
+
     return parametryWK;
 }
-void cController::dodatkoweOtworyNaPlycie(double przekatna,double odstepOtwory)
+void cController::dodatkoweOtworyNaPlycie(double odstepOtwory, double przekatna)
 {
-    double pozostalaDlugoscPlyty = dlugoscPlyty - wierszyIkolumnyPlyta[1] * (dlugoscOdcinku+ odlegloscPomiedzyOdcinkami);
-    double pozostalaSzerokoscPlyty = szerokoscPlyty - wierszyIkolumnyPlyta[0] * (szerokoscOdcinku + odlegloscPomiedzyOdcinkami);
+    double pozostalaDlugoscPlyty = getDlugoscPlyty() - wierszyIkolumnyPlyta[1] * (dlugoscOdcinku+ odlegloscPomiedzyOdcinkami);
+    double pozostalaSzerokoscPlyty = getSzerokoscPlyty()- wierszyIkolumnyPlyta[0] * (szerokoscOdcinku + odlegloscPomiedzyOdcinkami);
 
-    pozostalyOdcinekPionowyDlugosc = dlugoscFali / 2;
-    double  pozostalyOdcinekPionowyDlugoscCalkowita = szerokoscPlyty - pozostalaSzerokoscPlyty;
-    //
-    pozostalyOdcinekPionowySzerekosc = pozostalaDlugoscPlyty;
+    pozostalyOdcinekPionowyDlugosc = pozostalaSzerokoscPlyty;
+    pozostalyOdcinekPionowySzerekosc = dlugoscFali / 2;
 
     pozostalyOdcinekPoziomyDlugosc = dlugoscFali / 2;
-    double pozostalyOdcinekPoziomyDlugoscCalkowita = dlugoscPlyty;
-    //
-    pozostalyOdcinekPoziomySzerekosc = pozostalaSzerokoscPlyty;
+    pozostalyOdcinekPoziomySzerekosc = pozostalaDlugoscPlyty;
+
+    double  pozostalyOdcinekPionowyDlugoscCalkowita = getSzerokoscPlyty() - pozostalaSzerokoscPlyty;
+    double pozostalyOdcinekPoziomyDlugoscCalkowita = getDlugoscPlyty();
+
+    double iloscOdcinkowPionowa = floor((pozostalyOdcinekPionowyDlugoscCalkowita + odlegloscPomiedzyOdcinkami) / (pozostalyOdcinekPionowySzerekosc + odlegloscPomiedzyOdcinkami));
+    double iloscOdcinkowPozioma = floor((pozostalyOdcinekPoziomyDlugoscCalkowita + odlegloscPomiedzyOdcinkami) / (pozostalyOdcinekPoziomyDlugosc + odlegloscPomiedzyOdcinkami));
+
 
     double* dodatkoweOtworyPionowe = new double[2]; //odcinek Pionowy
     double* dodatkoweOtworyPoziome = new double[2]; //odcinek Poziomy
 
     double przyprostokatna = przekatna / sqrt(2);
 
-    double iloscOdcinkowPionowa = floor((pozostalyOdcinekPionowyDlugoscCalkowita) / (pozostalyOdcinekPionowyDlugosc + dlugoscFali / 10));
-    double iloscOdcinkowPozioma = floor((pozostalyOdcinekPoziomyDlugoscCalkowita) / (pozostalyOdcinekPoziomyDlugosc + dlugoscFali / 10));
 
     if (polozenie == 1)
     {
-        dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatProsty(odstepOtwory, przyprostokatna);
-        dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatProsty(odstepOtwory, przyprostokatna);
+        //dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatProsty(odstepOtwory, przyprostokatna);
+        //dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatProsty(odstepOtwory, przyprostokatna);
+        dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatProsty(odstepOtwory, przyprostokatna, pozostalyOdcinekPionowySzerekosc, pozostalyOdcinekPionowyDlugosc, true);
+        dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatProsty(odstepOtwory, przyprostokatna, pozostalyOdcinekPoziomySzerekosc, pozostalyOdcinekPoziomyDlugosc, true);
         dodatkoweOtwory dodatkoweOtworyTemp(dodatkoweOtworyPionowe[0], dodatkoweOtworyPionowe[1], dodatkoweOtworyPoziome[0], dodatkoweOtworyPoziome[1], iloscOdcinkowPionowa, iloscOdcinkowPozioma);
         v_dodatkoweOtwory.push_back(dodatkoweOtworyTemp);
     }
     else if (polozenie == 2)
     {
-        dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(odstepOtwory, przyprostokatna);
-        dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(odstepOtwory, przyprostokatna);
+        dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(odstepOtwory, przyprostokatna, pozostalyOdcinekPionowySzerekosc, pozostalyOdcinekPionowyDlugosc, true);
+        dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(odstepOtwory, przyprostokatna, pozostalyOdcinekPoziomySzerekosc, pozostalyOdcinekPoziomyDlugosc, true);
         dodatkoweOtwory dodatkoweOtworyTemp(dodatkoweOtworyPionowe[0], dodatkoweOtworyPionowe[1], dodatkoweOtworyPoziome[0], dodatkoweOtworyPoziome[1], iloscOdcinkowPionowa, iloscOdcinkowPozioma);
         v_dodatkoweOtwory.push_back(dodatkoweOtworyTemp);
     }
     else if (polozenie == 3)
     {
-        dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciNaPrzeciwprosokatnej(odstepOtwory, przyprostokatna, przekatna);
-        dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciNaPrzeciwprosokatnej(odstepOtwory, przyprostokatna, przekatna);
+        dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciNaPrzeciwprosokatnej(odstepOtwory, przyprostokatna, przekatna, pozostalyOdcinekPionowySzerekosc, pozostalyOdcinekPionowyDlugosc, true);
+        dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciNaPrzeciwprosokatnej(odstepOtwory, przyprostokatna, przekatna, pozostalyOdcinekPoziomySzerekosc, pozostalyOdcinekPoziomyDlugosc, true);
         dodatkoweOtwory dodatkoweOtworyTemp(dodatkoweOtworyPionowe[0], dodatkoweOtworyPionowe[1], dodatkoweOtworyPoziome[0], dodatkoweOtworyPoziome[1], iloscOdcinkowPionowa, iloscOdcinkowPozioma);
         v_dodatkoweOtwory.push_back(dodatkoweOtworyTemp);
     }
     else if (polozenie == 4)
     {
-        dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciZebow(odstepOtwory, przyprostokatna, przekatna);
-        dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciZebow(odstepOtwory, przyprostokatna, przekatna);
+        dodatkoweOtworyPionowe = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciZebow(odstepOtwory, przyprostokatna, przekatna, pozostalyOdcinekPionowySzerekosc, pozostalyOdcinekPionowyDlugosc, true);
+        dodatkoweOtworyPoziome = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciZebow(odstepOtwory, przyprostokatna, przekatna, pozostalyOdcinekPoziomySzerekosc, pozostalyOdcinekPoziomyDlugosc, true);
         dodatkoweOtwory dodatkoweOtworyTemp(dodatkoweOtworyPionowe[0], dodatkoweOtworyPionowe[1], dodatkoweOtworyPoziome[0], dodatkoweOtworyPoziome[1], iloscOdcinkowPionowa, iloscOdcinkowPozioma);
         v_dodatkoweOtwory.push_back(dodatkoweOtworyTemp);
     }
@@ -228,7 +268,7 @@ void cController::obliczenieParametrow()
             else if (polozenie == 2)
             {
                 wierszyIkolumnyOdcinek = wierszyOrazKolumnyNaOdcinkuTrojkatWPostaciKwadratu(odstepPomiedzyOtworamiWOdcinku, przyprostokatna);
-                dodatkoweOtworyNaPlycie( odstepPomiedzyOtworamiWOdcinku, przekatnaTymczasowa);
+                dodatkoweOtworyNaPlycie(odstepPomiedzyOtworamiWOdcinku, przekatnaTymczasowa);
                 iloscOtworowNaOdcinku = wierszyIkolumnyOdcinek[0] * wierszyIkolumnyOdcinek[1];
             }
             else if (polozenie == 3)
@@ -246,7 +286,7 @@ void cController::obliczenieParametrow()
             iloscOdcinkowNaPlycie = wierszyIkolumnyPlyta[0] * wierszyIkolumnyPlyta[1];
             skutecznosc = 20 * log10(dlugoscFali / (2 * przekatnaTymczasowa)) - 20 * log10(sqrt(wierszyIkolumnyOdcinek[0] * wierszyIkolumnyOdcinek[1]));
             v_skutecznosc.push_back(skutecznosc);
-            if (skutecznosc >= minimalnaSkutecznosc && skutecznosc <= maksymalnaSkutecznosc)
+            if (skutecznosc >= getMinimalnaSkutecznosc() && skutecznosc <= getMaksymalnaSkutecznosc())
             {
                 double iO = iloscOtworowNaOdcinku * iloscOdcinkowNaPlycie;
                 if (!v_dodatkoweOtwory.empty())
@@ -292,7 +332,8 @@ void cController::addData(double aPrzekatnaTymczasowa, double aSkutecznosc, doub
 void cController::printData()
 {
 
-    std::cout << "\nDane:\nPlyta[cm] :" << dlugoscPlyty * 100 << "x" << szerokoscPlyty * 100 << ", czestotliwosc[Hz]:" << czestotliwosc << ", zakres skut.[dB]: " << minimalnaSkutecznosc << " do " << maksymalnaSkutecznosc
+    std::cout << "\nDane:\nPlyta[cm] :" << getDlugoscPlyty() * 100 << "x" << getSzerokoscPlyty() * 100 << ", czestotliwosc[Hz]:" << getCzestotliwosc()<< ", zakres skut.[dB]: " << getMinimalnaSkutecznosc() 
+        << " do " << getMaksymalnaSkutecznosc()
         << ", polozenie: " << 5 << std::endl;
     std::cout << "Min.Przekatna[cm]: " << przekatnaMinimalna * 100 << ", max.Przekatna[cm]: " << przekatnaMaksymalna * 100;
 }
